@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Movie Night Planner — Design Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #12121a;
+    --surface: #1c1c28;
+    --surface-2: #23232f;
+    --gold: #e8b84b;
+    --gold-dim: #b3903c;
+    --crimson: #8c2f39;
+    --crimson-bright: #b8414c;
+    --text: #f1ede4;
+    --text-muted: #a8a5b0;
+    --border: #34343f;
+    --radius: 10px;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Work Sans', sans-serif; line-height: 1.5; }
+.filmstrip { height: 22px; background: repeating-linear-gradient(90deg, #000 0px, #000 14px, transparent 14px, transparent 28px); position: relative; }
+.filmstrip::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, var(--gold) 0 8px, transparent 8px 28px); opacity: 0.15; }
+.marquee { text-align: center; padding: 36px 20px 24px; background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%); border-bottom: 2px solid var(--gold-dim); }
+.marquee h1 { font-family: 'Bebas Neue', sans-serif; letter-spacing: 4px; font-size: 2.8rem; margin: 0; color: var(--gold); text-shadow: 0 0 18px rgba(232, 184, 75, 0.35); }
+.tagline { color: var(--text-muted); margin-top: 8px; font-size: 0.95rem; }
+.notice { max-width: 960px; margin: 16px auto 0; padding: 10px 16px; background: rgba(232,184,75,0.1); border: 1px dashed var(--gold-dim); border-radius: 8px; font-size: 0.85rem; color: var(--gold); text-align: center; }
+.wrap { max-width: 960px; margin: 0 auto; padding: 32px 20px 60px; display: grid; gap: 28px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+.card h2 { font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; font-size: 1.5rem; color: var(--gold); margin-top: 0; border-bottom: 1px dashed var(--border); padding-bottom: 10px; }
+.movie-form { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 20px; }
+.field-wide { grid-column: 1 / -1; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+label { font-size: 0.85rem; color: var(--text-muted); }
+input[type="text"], select, textarea { background: var(--surface-2); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; color: var(--text); font-family: inherit; font-size: 0.95rem; }
+input[type="text"]:focus, select:focus, textarea:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+textarea { resize: vertical; }
+.checkbox-field { justify-content: center; }
+.checkbox-label { display: flex; align-items: center; gap: 8px; color: var(--text); font-size: 0.9rem; cursor: pointer; }
+.checkbox-label input { width: 18px; height: 18px; accent-color: var(--gold); }
+.btn-submit { grid-column: 1 / -1; background: var(--gold); color: #1a1508; border: none; border-radius: 6px; padding: 12px 16px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: transform 0.15s ease, background 0.15s ease; }
+.btn-submit:hover { background: #f2c766; transform: translateY(-1px); }
+.table-scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 640px; }
+thead th { text-align: right; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); padding: 10px 12px; border-bottom: 2px solid var(--border); }
+tbody td { padding: 12px; border-bottom: 1px dashed var(--border); font-size: 0.9rem; vertical-align: middle; }
+.title-cell { font-weight: 600; }
+.stars { color: var(--gold); letter-spacing: 1px; }
+.note-cell { color: var(--text-muted); max-width: 220px; }
+.badge { display: inline-block; padding: 4px 10px; border-radius: 100px; font-size: 0.78rem; white-space: nowrap; }
+.badge-cat { background: var(--surface-2); color: var(--gold); border: 1px solid var(--gold-dim); }
+.badge-watched { background: rgba(76, 175, 100, 0.15); color: #7fd996; border: 1px solid #4c8f5e; }
+.badge-pending { background: rgba(140, 47, 57, 0.2); color: #e88b93; border: 1px solid var(--crimson); }
+.btn-toggle { background: var(--crimson); color: var(--text); border: none; border-radius: 6px; padding: 8px 14px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: background 0.15s ease, transform 0.15s ease; }
+.btn-toggle:hover { background: var(--crimson-bright); transform: translateY(-1px); }
+@media (max-width: 600px) { .movie-form { grid-template-columns: 1fr; } .marquee h1 { font-size: 2rem; } }
+</style>
+</head>
+<body>
+
+<div class="filmstrip"></div>
+
+<header class="marquee">
+    <h1>🎬 MOVIE NIGHT PLANNER</h1>
+    <p class="tagline">خطط لليلة أفلامك القادمة… أضف، قيّم، وتابع اللي شفته</p>
+</header>
+
+
+<main class="wrap">
+
+    <section class="card form-card">
+        <h2>إضافة فيلم جديد</h2>
+        <form id="movieForm" class="movie-form">
+            <div class="field">
+                <label for="title">اسم الفيلم</label>
+                <input type="text" id="title" placeholder="مثال: Inception" required maxlength="150">
+            </div>
+            <div class="field">
+                <label for="category">التصنيف</label>
+                <select id="category" required>
+                    <option value="" disabled selected>اختر تصنيف</option>
+                    <option>Action</option>
+                    <option>Comedy</option>
+                    <option>Drama</option>
+                    <option>Horror</option>
+                    <option>Romance</option>
+                    <option>Sci-Fi</option>
+                    <option>Animation</option>
+                    <option>Documentary</option>
+                </select>
+            </div>
+            <div class="field">
+                <label for="rating">التقييم</label>
+                <select id="rating" required>
+                    <option value="" disabled selected>من 1 إلى 5</option>
+                    <option value="1">★☆☆☆☆</option>
+                    <option value="2">★★☆☆☆</option>
+                    <option value="3">★★★☆☆</option>
+                    <option value="4">★★★★☆</option>
+                    <option value="5">★★★★★</option>
+                </select>
+            </div>
+            <div class="field checkbox-field">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="watched">
+                    <span>سبق وشاهدته</span>
+                </label>
+            </div>
+            <div class="field field-wide">
+                <label for="note">ملاحظة</label>
+                <textarea id="note" rows="2" placeholder="أي تعليق أو ملاحظة عن الفيلم..." maxlength="500"></textarea>
+            </div>
+            <button type="submit" class="btn-submit">إضافة إلى القائمة 🍿</button>
+        </form>
+    </section>
+
+    <section class="card table-card">
+        <h2>قائمة أفلامي</h2>
+        <div class="table-scroll">
+        <table id="moviesTable">
+            <thead>
+                <tr>
+                    <th>الفيلم</th><th>التصنيف</th><th>التقييم</th><th>الحالة</th><th>ملاحظة</th><th>تبديل</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="title-cell">Inception</td>
+                    <td><span class="badge badge-cat">Sci-Fi</span></td>
+                    <td class="stars">★★★★★</td>
+                    <td><span class="badge badge-watched">✅ تمت المشاهدة</span></td>
+                    <td class="note-cell">لازم أعيد مشاهدته</td>
+                    <td><button class="btn-toggle" onclick="demoToggle(this)">Toggle</button></td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+    </section>
+
+</main>
+
+<div class="filmstrip"></div>
+
+<script>
+// عرض توضيحي فقط: يضيف السطر في الجدول محلياً بدون أي اتصال بقاعدة بيانات
+document.getElementById("movieForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const title = document.getElementById("title").value;
+    const category = document.getElementById("category").value;
+    const rating = parseInt(document.getElementById("rating").value, 10);
+    const watched = document.getElementById("watched").checked;
+    const note = document.getElementById("note").value || "—";
+
+    const stars = "★".repeat(rating) + "☆".repeat(5 - rating);
+    const tbody = document.querySelector("#moviesTable tbody");
+    const row = document.createElement("tr");
+    row.innerHTML = `
+        <td class="title-cell">${title}</td>
+        <td><span class="badge badge-cat">${category}</span></td>
+        <td class="stars">${stars}</td>
+        <td><span class="badge ${watched ? "badge-watched" : "badge-pending"}">${watched ? "✅ تمت المشاهدة" : "🎟️ لم يشاهد بعد"}</span></td>
+        <td class="note-cell">${note}</td>
+        <td><button class="btn-toggle" onclick="demoToggle(this)">Toggle</button></td>
+    `;
+    tbody.appendChild(row);
+    this.reset();
+});
+
+function demoToggle(btn) {
+    const badge = btn.closest("tr").querySelector(".badge:nth-child(1), .badge");
+    const statusBadge = btn.closest("tr").querySelectorAll("td")[3].querySelector(".badge");
+    const isWatched = statusBadge.classList.contains("badge-watched");
+    if (isWatched) {
+        statusBadge.textContent = "🎟️ لم يشاهد بعد";
+        statusBadge.classList.remove("badge-watched");
+        statusBadge.classList.add("badge-pending");
+    } else {
+        statusBadge.textContent = "✅ تمت المشاهدة";
+        statusBadge.classList.remove("badge-pending");
+        statusBadge.classList.add("badge-watched");
+    }
+}
+</script>
+</body>
+</html>
