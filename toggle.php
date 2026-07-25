@@ -1,14 +1,10 @@
 <?php
-/**
- * toggle.php
- * يستقبل id عن طريق fetch() من index.php
- * يقلب حالة watched (0 <-> 1) في قاعدة البيانات ويرجعها JSON بدون إعادة تحميل الصفحة
- */
+
 
 $DB_HOST = "sql111.infinityfree.com";
-$DB_USER = "if0_42498480";
-$DB_PASS = "Pq4UQBpme0FruO";
-$DB_NAME = "if0_42498480_amani";
+$DB_USER = "**********";
+$DB_PASS = "**********";
+$DB_NAME = "**********";
 
 $conn = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
 header("Content-Type: application/json; charset=utf8mb4");
